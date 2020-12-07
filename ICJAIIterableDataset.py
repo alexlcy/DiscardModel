@@ -77,7 +77,7 @@ class ICJAIIterableDataset(IterableDataset):
         - y (torch.tensor, int64): shape [1]
         '''
         data = json.loads(data)
-        x = torch.zeros(2+(self.hist_len+1)*17, 34, dtype=torch.float32)
+        x = torch.zeros(2+(self.hist_len+1)*21, 34, dtype=torch.float32)
         y = torch.tensor(self.mj2id[data[0]['label']], dtype=torch.int64)
         for hist_i, hist_data in enumerate(data):
             player = str(hist_data['turn_player'])
@@ -116,11 +116,13 @@ class ICJAIIterableDataset(IterableDataset):
             open_meld = []
             for player_id, meld in hist_data['open_meld'].items():
                 if player_id != player:
-                    open_melt += meld
+                    open_meld += meld
             open_meld = self.tiles2mat(open_meld)
 
             hist_x = torch.cat([own_hand, own_last_discard, others_last_discard, own_discard, others_discard, open_meld], dim=0)
-            x[2+hist_i*hist_x.shape[0]:2+(hist_i+1)*hist_x.shape[0], :] = hist_x
+
+            x[2+hist_i*hist_x.shape[0] : 2+(hist_i+1)*hist_x.shape[0], :] = hist_x
+
         return x.unsqueeze(-1), y
 
 # dataset = CustomIterableDataset('processed_data/discard_tile_train.nosync.txt', history_len=4)
