@@ -39,8 +39,7 @@ class ICJAIIterableDataset(IterableDataset):
         t_dict = {'T' + str(i+1): i+18 for i in range(9)} #条
         f_dict = {'F' + str(i+1): i+27 for i in range(4)} #风 东南西北
         j_dict = {'J' + str(i+1): i+31 for i in range(3)} #（剑牌）中发白
-        h_dict = {'H' + str(i+1): i+34 for i in range(8)} #梅兰竹菊
-        self.mj2id = {**w_dict, **b_dict,**t_dict,**f_dict,**j_dict,**h_dict}
+        self.mj2id = {**w_dict, **b_dict,**t_dict,**f_dict,**j_dict}
         
         
     def tiles2mat(self, mj_list):
@@ -54,10 +53,11 @@ class ICJAIIterableDataset(IterableDataset):
         repr = torch.zeros(4, 34, dtype=torch.float32)
         count = Counter(mj_list)
         for i in count:
-            index = self.mj2id[i]
-            nums = count[i]
-            for j in range(nums):
-                repr[j, index] = 1
+            if not i.startswith("H"):
+                index = self.mj2id[i]
+                nums = count[i]
+                for j in range(nums):
+                    repr[j, index] = 1
         return repr
 
     def tile2vec(self, tile):
