@@ -111,8 +111,15 @@ class ICJAIIterableDataset(IterableDataset):
                 if player_id != player:
                     others_discard += discard
             others_discard = self.tiles2mat(others_discard)
+            
+            # Open Meld(4, 34)
+            open_meld = []
+            for player_id, meld in hist_data['open_meld'].items():
+                if player_id != player:
+                    open_melt += meld
+            open_meld = self.tiles2mat(open_meld)
 
-            hist_x = torch.cat([own_hand, own_last_discard, others_last_discard, own_discard, others_discard], dim=0)
+            hist_x = torch.cat([own_hand, own_last_discard, others_last_discard, own_discard, others_discard, open_meld], dim=0)
             x[2+hist_i*hist_x.shape[0]:2+(hist_i+1)*hist_x.shape[0], :] = hist_x
         return x.unsqueeze(-1), y
 
