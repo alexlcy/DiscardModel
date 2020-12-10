@@ -40,7 +40,7 @@ class ResidualBlock(nn.Module):
 class MJResNet50(nn.Module):
     def __init__(self, history_len, n_cls=34, n_residuals=50):
         super().__init__()
-        self.net = self.create_model(2+(history_len+1)*17, n_residuals, n_cls)
+        self.net = self.create_model(2+(history_len+1)*21, n_residuals, n_cls)
 
     def forward(self, x):
         return self.net(x)
